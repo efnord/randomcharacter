@@ -575,7 +575,29 @@ class ApollyonCharacter(AscendingAcMixin, ReRollHDPerSessionMixin, LBBCharacter)
             return -1
         return 0
 
-    @property
+    def get_character_class(self, classname=None):
+        """
+        We randomly check for demihuman status, which needs to reroll stats, then determine character class based on your prime attribute.
+        """
+        classNum = d(20)
+        if classname:
+            return characterclass.CLASS_BY_NAME[classname]
+        if classNum < 5:
+            # sorted attributes (excluding charisma)
+            attributes = sorted(self.attributes[:5], reverse=True,
+                                key=operator.itemgetter(1))
+            # You're playing a human!
+            index = 4 if self.thieves else 3
+            prime_attribute, _ = sorted(self.attributes[:index],
+                                    reverse=True, key=operator.itemgetter(1))[0]
+            return characterclass.PRIME_REQUISITE[prime_attribute]
+        elif classNum=5 return characterclass.FROGLING
+        elif classNum=4 return characterclass.FLYINGMONKEY
+        elif classNum=3 return characterclass.MERROWMAN
+        elif classNum=2 return characterclass.DRAUGR
+        elif classNum=1 return characterclass.PASSENGER
+
+     @property
     def thieves(self):
         return True
 
